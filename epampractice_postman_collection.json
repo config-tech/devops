@@ -1,0 +1,719 @@
+{
+	"info": {
+		"_postman_id": "ec7756ee-3e32-4bb8-ac11-af9cea3b53b5",
+		"name": "practice",
+		"description": "This is a test for testing game on practicie",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Create User",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "a2a93a34-b68c-41a5-9529-c705a0017938",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "ad6421d4-b50d-4571-8f0c-43839a452614",
+								"exec": [
+									"pm.test(\"Status code is 201\",function() {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check role set to 1\", function() {\r",
+									"  pm.expect(pm.response.json().role).to.eql(1);\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"login\",pm.response.json().login);\r",
+									"pm.environment.set(\"id\",pm.response.json().id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Login\": \"{{$guid}}\",\r\n  \"NativeName\": \"Rigoberto Ritchie\",\r\n  \"Password\": \"0123456789q#\",\r\n  \"ConfirmPassword\": \"0123456789q#\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/user",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						},
+						"description": "Try to create user in game "
+					},
+					"response": []
+				},
+				{
+					"name": "Get user token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ab298843-06f3-444b-a4dc-13319aea176b",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check access_token is string\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.access_token).to.be.a('string');\r",
+									"});\r",
+									"\r",
+									"var jsonResp = pm.response.json();\r",
+									"postman.setEnvironmentVariable(\"token\", jsonResp[\"access_token\"]);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "{{login}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "0123456789q#",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/token",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get info about me",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8d9f6d9e-d6e4-455b-a0cb-f37f92a1ddbc",
+								"exec": [
+									"pm.test(\"Status code is 200\",function() {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check login is string\", function() {\r",
+									"  pm.expect(pm.response.json().login).to.be.a('string');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/me",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get info about another user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "74efd212-dad4-43e0-a399-28a3149d6743",
+								"exec": [
+									"pm.test(\"Status code is 200\",function() {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check name is string\", function() {\r",
+									"  pm.expect(pm.response.json().nativeName).to.be.a('string');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/user/{{id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update user credentials",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9d4ad1d7-1f0a-442f-8f16-0aeefad024b6",
+								"exec": [
+									"pm.test(\"Status code is 200\",function() {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check new name is correct\", () => {\r",
+									"  pm.expect(pm.response.json().nativeName).to.eql(JSON.parse(pm.request.body.raw).NativeName);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "5f68db86-0750-4a1c-97fc-85fa56ce7984",
+								"exec": [
+									"pm.variables.set('newname','{{$randomWord}} {{$randomWord}}');"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"NativeName\": \"{{newname}}\",\r\n  \"Role\": 0,\r\n  \"OldPassword\": \"0123456789q#\",\r\n  \"Password\": \"0123456789q#\",\r\n  \"ConfirmPassword\": \"0123456789q#\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/user/{{id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Map",
+			"item": [
+				{
+					"name": "Get all maps",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e88ee250-f24c-4422-aee6-d0bf70713a96",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check all maps have width and height\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    for (i = 0; i < jsonData.length; i++) {\r",
+									"        pm.expect(jsonData[i].width).to.be.a('number');\r",
+									"        pm.expect(jsonData[i].height).to.be.a('number');\r",
+									"    }\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response message\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.message).to.not.eql(\"An error has occurred.\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/map",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"map"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all maps (maps)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7544c277-a464-4311-9c6b-dd402ddb4def",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check all maps have width and height\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    for (i = 0; i < jsonData.length; i++) {\r",
+									"        pm.expect(jsonData[i].width).to.be.a('number');\r",
+									"        pm.expect(jsonData[i].height).to.be.a('number');\r",
+									"    }\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response message\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.message).to.not.eql(\"An error has occurred.\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/maps",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"maps"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user maps",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0a061186-bafa-499f-9570-4518fa7f5b8f",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check response is array\", function () {\r",
+									"    pm.expect(pm.response.json()).to.be.a('array');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/user/{{id}}/maps",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"{{id}}",
+								"maps"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Game",
+			"item": [
+				{
+					"name": "Create game",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c9250b74-daf9-48a0-845a-0215a4fe769b",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check id game is string\", function () {\r",
+									"    pm.expect(pm.response.json().id).to.be.a('string');\r",
+									"});\r",
+									"\r",
+									"pm.environment.set('gameid',pm.response.json().id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Name\": \"{{$randomWords}}\",\r\n  \"MapId\": \"ce808fae80274353bd85743ec4d21fc8\",\r\n  \"SwitchTimeout\": 0,\r\n  \"StartupTeamLives\": 0,\r\n  \"PoliceSpeed\": 0,\r\n  \"ThiefSpeed\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/game",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"game"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user games",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c5a76c4a-243a-4955-a977-dccba37ff4fd",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check entities is array\", function () {\r",
+									"    pm.expect(pm.response.json().entities).to.be.a('array');\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/game?start=0&count=5",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"game"
+							],
+							"query": [
+								{
+									"key": "start",
+									"value": "0"
+								},
+								{
+									"key": "count",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all games",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "dd0a18c1-d0b6-491d-ab05-bf42db08628d",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check entities is array\", function () {\r",
+									"    pm.expect(pm.response.json().entities).to.be.a('array');\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/games?start=0&count=5",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"games"
+							],
+							"query": [
+								{
+									"key": "start",
+									"value": "0"
+								},
+								{
+									"key": "count",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get game by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0f27f7ad-011c-4c51-a445-8645e9c986f4",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check map cells is array\", function () {\r",
+									"    pm.expect(pm.response.json().map.cells).to.be.a('array');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/game/{{gameid}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"game",
+								"{{gameid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete game",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6a51f283-28a2-48a3-ba24-92cbb292f9ad",
+								"exec": [
+									"pm.test(\"Status code is 202\", function () {\r",
+									"    pm.response.to.have.status(202);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than 400ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(400);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{url}}/api/game/{{gameid}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"game",
+								"{{gameid}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "8bfdfe1e-af25-4550-a48d-09164bde508f",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "51be5bb1-3639-45b8-afdc-9ab38509e93f",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "88af4cf0-e87e-42fb-9aad-f42b9852e4d6",
+			"key": "url",
+			"value": "http://104.40.150.146/"
+		}
+	],
+	"protocolProfileBehavior": {}
+}
