@@ -48,56 +48,6 @@
 			"response": []
 		},
 		{
-			"name": "Create User",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "9bbda83f-de69-4cca-8970-9db16c9134af",
-						"exec": [
-							"pm.test(\"Status code is 201\", function () {\r",
-							"    pm.response.to.have.status(201);\r",
-							"});\r",
-							"\r",
-							"pm.test(\"Your login\", function () {\r",
-							"    var jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData.login).to.eql(\"proger\");\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"Login\": \"proger\",\r\n    \"NativeName\": \"Test User\",\r\n    \"Password\": \"halloword\",\r\n    \"ConfirmPassword\": \"halloword\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "104.40.150.146/api/user",
-					"host": [
-						"104",
-						"40",
-						"150",
-						"146"
-					],
-					"path": [
-						"api",
-						"user"
-					]
-				},
-				"description": "User Creation"
-			},
-			"response": []
-		},
-		{
 			"name": "User Info",
 			"event": [
 				{
